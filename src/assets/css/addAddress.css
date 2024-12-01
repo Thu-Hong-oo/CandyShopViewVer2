@@ -1,0 +1,55 @@
+/* Đặt toàn bộ overlay phủ lên màn hình */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0
+  ); /* Màu nền mờ để làm mờ các phần xung quanh */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999; /* Đảm bảo modal luôn hiển thị trên cùng */
+}
+
+/* Thiết lập modal với độ rộng cố định */
+.popup {
+  background-color: #fff;
+
+  border-radius: 8px;
+  width: 400px; /* Đặt độ rộng cho modal */
+  max-height: 600px; /* Giới hạn chiều cao modal */
+  overflow-y: auto; /* Thêm thanh cuộn nếu nội dung vượt quá chiều cao */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ cho modal */
+  animation: fadeIn 0.3s ease-in-out; /* Thêm hiệu ứng mở modal */
+}
+
+/* Thêm hiệu ứng khi modal xuất hiện */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+button.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+button.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+button.btn-secondary:hover {
+  background-color: #5a6268;
+}
