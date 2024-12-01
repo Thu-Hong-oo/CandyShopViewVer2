@@ -8,7 +8,6 @@ import "react-toastify/dist/ReactToastify.css"; // Import CSS cho toast
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import AddAddress from "./components/addAddress";
-import ShippingAddresess from "./components/ShippingAddresess";
 
 import Product from "./pages/Product";
 import SignIn from "./pages/SignIn";
@@ -34,9 +33,8 @@ function App() {
       <div>
         <Header />
         <Routes>
-     
           <Route path="/" element={<Homepage />} />
-          <Route path="/ship" element={<ShippingAddresess />} />
+          <Route path="/addaddress" element={<AddAddress />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/product/:subCategoryId" element={<Product />} />

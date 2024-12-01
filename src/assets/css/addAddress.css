@@ -1,55 +1,82 @@
-/* Đặt toàn bộ overlay phủ lên màn hình */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(
-    0,
-    0,
-    0,
-    0
-  ); /* Màu nền mờ để làm mờ các phần xung quanh */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999999; /* Đảm bảo modal luôn hiển thị trên cùng */
-}
-
-/* Thiết lập modal với độ rộng cố định */
-.popup {
+/* Đặt container của form thêm địa chỉ */
+.address-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
   background-color: #fff;
-
   border-radius: 8px;
-  width: 400px; /* Đặt độ rộng cho modal */
-  max-height: 600px; /* Giới hạn chiều cao modal */
-  overflow-y: auto; /* Thêm thanh cuộn nếu nội dung vượt quá chiều cao */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ cho modal */
-  animation: fadeIn 0.3s ease-in-out; /* Thêm hiệu ứng mở modal */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Thêm hiệu ứng khi modal xuất hiện */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+/* Tiêu đề form */
+.address-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-button.btn-primary:hover {
-  background-color: #0056b3;
+/* Nhóm form */
+.address-form-group {
+  margin-bottom: 20px;
 }
 
-button.btn-secondary {
-  background-color: #6c757d;
+/* Label */
+.address-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Input */
+.address-input,
+.address-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.address-input:focus,
+.address-select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Nút bấm */
+.address-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.address-btn {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.address-btn-primary {
+  background-color: #007bff;
   color: white;
 }
 
-button.btn-secondary:hover {
-  background-color: #5a6268;
+.address-btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Thông báo lỗi */
+.address-alert {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
 }

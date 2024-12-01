@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../assets/css/product.css";
-
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/slices/cartSlice";
+import { useParams } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Product = ({ setCartCount }) => {
@@ -12,6 +13,9 @@ const Product = ({ setCartCount }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const limit = 12; // Số lượng sản phẩm tối đa trên mỗi trang
+  const { subCategoryId } = useParams();
+  const { keyword } = useParams();
+  const [subCategory, setSubCategory] = useState("");
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [notification, setNotification] = useState(null);
@@ -28,26 +32,65 @@ const Product = ({ setCartCount }) => {
     }, 2000);
     return () => clearInterval(interval); // Dọn dẹp khi component unmount
   }, [images.length]);
-  const fetchProducts = async (page) => {
+
+  const fetchSubCategory = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8081/api/products?page=${page}&limit=${limit}`
+      const response = await fetch(
+        `http://localhost:8081/api/subcategories/${subCategoryId}`
       );
+      if (!response.ok) {
+        throw new Error("Failed to fetch subcategory");
+      }
+      const data = await response.json();
+      setSubCategory(data.data); // Giả sử API trả về tên phân loại trong data.name
+    } catch (error) {
+      console.error("Error fetching subcategory:", error);
+    }
+  };
+  const fetchProducts = async (page) => {
+    console.log("Keyword:", keyword);
+    try {
+      let response;
+      if (subCategoryId) {
+        response = await axios.get(
+          `http://localhost:8081/api/products/subcategory/${subCategoryId}?page=${page}&limit=${limit}`
+        );
+      } else if (keyword) {
+        response = await axios.get(
+          `http://localhost:8081/api/products/searchByName?name=${keyword}&page=${page}&limit=${limit}`
+        );
+      } else {
+        response = await axios.get(
+          `http://localhost:8081/api/products?limit=${limit}&page=${page}`
+        );
+      }
       const data = response.data.data;
-      console.log("data", data);
       setProducts(data.content);
       setTotalPages(data.totalPages);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching products:", error);
+      console.error(
+        "Error updating product price:",
+        error.response ? error.response.data : error
+      );
       setLoading(false);
     }
   };
+  const navigate = useNavigate();
+  const handleViewDetail = (productId) => {
+    // Chuyển hướng đến trang chi tiết sản phẩm với productId
+    navigate(`/productDetail/${productId}`);
+  };
 
   useEffect(() => {
-    console.log("Fetching products for page:", currentPage);
+    console.log(subCategoryId);
+    if (subCategoryId) {
+      fetchSubCategory();
+    }
+
     fetchProducts(currentPage);
-  }, [currentPage]);
+  }, [currentPage, subCategoryId, keyword]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -62,12 +105,12 @@ const Product = ({ setCartCount }) => {
     dispatch(addToCart(product));
     // Hiển thị thông báo
     setNotification(`Đã thêm 1 sản phẩm vào giỏ hàng!`);
-    setTimeout(() => setNotification(null), 500); // Tự động ẩn sau 1.5 giây (1500 ms)
+    setTimeout(() => setNotification(null), 500);
   };
 
   return (
     <div className="container-fluid px-0">
-      <div className="banner row px-0">
+      <div className="banner row px-0 ">
         <div
           id="carouselExampleAutoplaying"
           className="carousel slide px-0"
@@ -116,7 +159,8 @@ const Product = ({ setCartCount }) => {
         </div>
       </div>
 
-      <div className="product">
+      <div className="product mt-4">
+        <h3>{subCategory.subCategoryName}</h3>
         <div className="row">
           {products.length > 0 ? (
             products.map((product) => (
@@ -128,7 +172,9 @@ const Product = ({ setCartCount }) => {
                     className="product-image"
                   />
                   <div className="overlay">
-                    <h3>Xem chi tiết</h3>
+                    <h3 onClick={() => handleViewDetail(product.productId)}>
+                      Xem chi tiết
+                    </h3>
                   </div>
                 </div>
 
@@ -139,8 +185,9 @@ const Product = ({ setCartCount }) => {
                     <button
                       onClick={() => handleAddToCart(product)}
                       style={{ marginLeft: "10px" }}
+                      className="buttonCartProduct"
                     >
-                      <i className="fa fa-shopping-cart position-relative" />
+                      <i className="fa fa-shopping-cart position-relative " />
                     </button>
                   </p>
                 </div>
@@ -148,7 +195,7 @@ const Product = ({ setCartCount }) => {
             ))
           ) : (
             <div className="col text-center">
-              <p>Không có sản phẩm nào.</p>
+              <h4>Loading</h4>
             </div>
           )}
         </div>
